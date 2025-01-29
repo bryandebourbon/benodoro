@@ -7,7 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E074D1F2D49CAFC00375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
 		2E074D402D49CAFE00375131 /* benodoro Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2E074D3F2D49CAFE00375131 /* benodoro Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2E074D972D49CBAB00375131 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E074D7E2D49CB7500375131 /* WidgetKit.framework */; };
+		2E074D982D49CBAB00375131 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E074D802D49CB7500375131 /* SwiftUI.framework */; };
+		2E074DA32D49CBAC00375131 /* benodoroWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2E074D962D49CBAB00375131 /* benodoroWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2E074DD82D49CF0B00375131 /* PomodoroManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074DD72D49CF0000375131 /* PomodoroManager.swift */; };
+		2E074DDE2D49DAB200375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
+		2E074DDF2D49DAB200375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
+		2E074DE02D49DAB200375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +54,27 @@
 			remoteGlobalIDString = 2E074D3E2D49CAFE00375131;
 			remoteInfo = "benodoro Watch App";
 		};
+		2E074DA12D49CBAC00375131 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E074D112D49CAFC00375131 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E074D952D49CBAB00375131;
+			remoteInfo = benodoroWatchWidgetExtension;
+		};
+		2E074DBD2D49CECC00375131 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E074D112D49CAFC00375131 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E074DAB2D49CECA00375131;
+			remoteInfo = benodoroMacApp;
+		};
+		2E074DC72D49CECC00375131 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E074D112D49CAFC00375131 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E074DAB2D49CECA00375131;
+			remoteInfo = benodoroMacApp;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -60,16 +89,46 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E074D912D49CB7700375131 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2E074DA32D49CBAC00375131 /* benodoroWatchWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2E074D192D49CAFC00375131 /* benodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = benodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E074D1E2D49CAFC00375131 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2E074D292D49CAFE00375131 /* benodoroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = benodoroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E074D332D49CAFE00375131 /* benodoroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = benodoroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E074D3F2D49CAFE00375131 /* benodoro Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "benodoro Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E074D512D49CAFF00375131 /* benodoro Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "benodoro Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E074D5B2D49CAFF00375131 /* benodoro Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "benodoro Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E074D7E2D49CB7500375131 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		2E074D802D49CB7500375131 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		2E074D962D49CBAB00375131 /* benodoroWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = benodoroWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E074DAC2D49CECA00375131 /* benodoroMacApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = benodoroMacApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E074DBC2D49CECC00375131 /* benodoroMacAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = benodoroMacAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E074DC62D49CECC00375131 /* benodoroMacAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = benodoroMacAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E074DD72D49CF0000375131 /* PomodoroManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroManager.swift; sourceTree = "<group>"; };
+		2E074DDD2D49D29E00375131 /* benodoroWatchWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = benodoroWatchWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2E074DA42D49CBAC00375131 /* Exceptions for "benodoroWatchWidget" folder in "benodoroWatchWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2E074D952D49CBAB00375131 /* benodoroWatchWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2E074D1B2D49CAFC00375131 /* benodoro */ = {
@@ -100,6 +159,29 @@
 		2E074D5E2D49CAFF00375131 /* benodoro Watch AppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "benodoro Watch AppUITests";
+			sourceTree = "<group>";
+		};
+		2E074D992D49CBAB00375131 /* benodoroWatchWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2E074DA42D49CBAC00375131 /* Exceptions for "benodoroWatchWidget" folder in "benodoroWatchWidgetExtension" target */,
+			);
+			path = benodoroWatchWidget;
+			sourceTree = "<group>";
+		};
+		2E074DAD2D49CECA00375131 /* benodoroMacApp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = benodoroMacApp;
+			sourceTree = "<group>";
+		};
+		2E074DBF2D49CECC00375131 /* benodoroMacAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = benodoroMacAppTests;
+			sourceTree = "<group>";
+		};
+		2E074DC92D49CECC00375131 /* benodoroMacAppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = benodoroMacAppUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -147,18 +229,56 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E074D932D49CBAB00375131 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E074D982D49CBAB00375131 /* SwiftUI.framework in Frameworks */,
+				2E074D972D49CBAB00375131 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DA92D49CECA00375131 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DB92D49CECC00375131 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DC32D49CECC00375131 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2E074D102D49CAFC00375131 = {
 			isa = PBXGroup;
 			children = (
+				2E074DDD2D49D29E00375131 /* benodoroWatchWidgetExtension.entitlements */,
+				2E074DD72D49CF0000375131 /* PomodoroManager.swift */,
+				2E074D1E2D49CAFC00375131 /* ContentView.swift */,
 				2E074D1B2D49CAFC00375131 /* benodoro */,
 				2E074D2C2D49CAFE00375131 /* benodoroTests */,
 				2E074D362D49CAFE00375131 /* benodoroUITests */,
 				2E074D432D49CAFE00375131 /* benodoro Watch App */,
 				2E074D542D49CAFF00375131 /* benodoro Watch AppTests */,
 				2E074D5E2D49CAFF00375131 /* benodoro Watch AppUITests */,
+				2E074D992D49CBAB00375131 /* benodoroWatchWidget */,
+				2E074DAD2D49CECA00375131 /* benodoroMacApp */,
+				2E074DBF2D49CECC00375131 /* benodoroMacAppTests */,
+				2E074DC92D49CECC00375131 /* benodoroMacAppUITests */,
+				2E074D7D2D49CB7500375131 /* Frameworks */,
 				2E074D1A2D49CAFC00375131 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -172,8 +292,21 @@
 				2E074D3F2D49CAFE00375131 /* benodoro Watch App.app */,
 				2E074D512D49CAFF00375131 /* benodoro Watch AppTests.xctest */,
 				2E074D5B2D49CAFF00375131 /* benodoro Watch AppUITests.xctest */,
+				2E074D962D49CBAB00375131 /* benodoroWatchWidgetExtension.appex */,
+				2E074DAC2D49CECA00375131 /* benodoroMacApp.app */,
+				2E074DBC2D49CECC00375131 /* benodoroMacAppTests.xctest */,
+				2E074DC62D49CECC00375131 /* benodoroMacAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2E074D7D2D49CB7500375131 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E074D7E2D49CB7500375131 /* WidgetKit.framework */,
+				2E074D802D49CB7500375131 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,10 +389,12 @@
 				2E074D3B2D49CAFE00375131 /* Sources */,
 				2E074D3C2D49CAFE00375131 /* Frameworks */,
 				2E074D3D2D49CAFE00375131 /* Resources */,
+				2E074D912D49CB7700375131 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2E074DA22D49CBAC00375131 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				2E074D432D49CAFE00375131 /* benodoro Watch App */,
@@ -317,6 +452,96 @@
 			productReference = 2E074D5B2D49CAFF00375131 /* benodoro Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		2E074D952D49CBAB00375131 /* benodoroWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E074DA52D49CBAC00375131 /* Build configuration list for PBXNativeTarget "benodoroWatchWidgetExtension" */;
+			buildPhases = (
+				2E074D922D49CBAB00375131 /* Sources */,
+				2E074D932D49CBAB00375131 /* Frameworks */,
+				2E074D942D49CBAB00375131 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2E074D992D49CBAB00375131 /* benodoroWatchWidget */,
+			);
+			name = benodoroWatchWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = benodoroWatchWidgetExtension;
+			productReference = 2E074D962D49CBAB00375131 /* benodoroWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		2E074DAB2D49CECA00375131 /* benodoroMacApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E074DCE2D49CECC00375131 /* Build configuration list for PBXNativeTarget "benodoroMacApp" */;
+			buildPhases = (
+				2E074DA82D49CECA00375131 /* Sources */,
+				2E074DA92D49CECA00375131 /* Frameworks */,
+				2E074DAA2D49CECA00375131 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2E074DAD2D49CECA00375131 /* benodoroMacApp */,
+			);
+			name = benodoroMacApp;
+			packageProductDependencies = (
+			);
+			productName = benodoroMacApp;
+			productReference = 2E074DAC2D49CECA00375131 /* benodoroMacApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2E074DBB2D49CECC00375131 /* benodoroMacAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E074DD12D49CECC00375131 /* Build configuration list for PBXNativeTarget "benodoroMacAppTests" */;
+			buildPhases = (
+				2E074DB82D49CECC00375131 /* Sources */,
+				2E074DB92D49CECC00375131 /* Frameworks */,
+				2E074DBA2D49CECC00375131 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2E074DBE2D49CECC00375131 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2E074DBF2D49CECC00375131 /* benodoroMacAppTests */,
+			);
+			name = benodoroMacAppTests;
+			packageProductDependencies = (
+			);
+			productName = benodoroMacAppTests;
+			productReference = 2E074DBC2D49CECC00375131 /* benodoroMacAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2E074DC52D49CECC00375131 /* benodoroMacAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E074DD42D49CECC00375131 /* Build configuration list for PBXNativeTarget "benodoroMacAppUITests" */;
+			buildPhases = (
+				2E074DC22D49CECC00375131 /* Sources */,
+				2E074DC32D49CECC00375131 /* Frameworks */,
+				2E074DC42D49CECC00375131 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2E074DC82D49CECC00375131 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2E074DC92D49CECC00375131 /* benodoroMacAppUITests */,
+			);
+			name = benodoroMacAppUITests;
+			packageProductDependencies = (
+			);
+			productName = benodoroMacAppUITests;
+			productReference = 2E074DC62D49CECC00375131 /* benodoroMacAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -349,6 +574,20 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 2E074D3E2D49CAFE00375131;
 					};
+					2E074D952D49CBAB00375131 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					2E074DAB2D49CECA00375131 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					2E074DBB2D49CECC00375131 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 2E074DAB2D49CECA00375131;
+					};
+					2E074DC52D49CECC00375131 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 2E074DAB2D49CECA00375131;
+					};
 				};
 			};
 			buildConfigurationList = 2E074D142D49CAFC00375131 /* Build configuration list for PBXProject "benodoro" */;
@@ -371,6 +610,10 @@
 				2E074D3E2D49CAFE00375131 /* benodoro Watch App */,
 				2E074D502D49CAFF00375131 /* benodoro Watch AppTests */,
 				2E074D5A2D49CAFF00375131 /* benodoro Watch AppUITests */,
+				2E074D952D49CBAB00375131 /* benodoroWatchWidgetExtension */,
+				2E074DAB2D49CECA00375131 /* benodoroMacApp */,
+				2E074DBB2D49CECC00375131 /* benodoroMacAppTests */,
+				2E074DC52D49CECC00375131 /* benodoroMacAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -418,6 +661,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E074D942D49CBAB00375131 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DAA2D49CECA00375131 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DBA2D49CECC00375131 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DC42D49CECC00375131 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -425,6 +696,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E074D1F2D49CAFC00375131 /* ContentView.swift in Sources */,
+				2E074DD82D49CF0B00375131 /* PomodoroManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +719,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E074DDE2D49DAB200375131 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +731,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2E074D572D49CAFF00375131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074D922D49CBAB00375131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E074DDF2D49DAB200375131 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DA82D49CECA00375131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E074DE02D49DAB200375131 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DB82D49CECC00375131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E074DC22D49CECC00375131 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -490,6 +794,21 @@
 			isa = PBXTargetDependency;
 			target = 2E074D3E2D49CAFE00375131 /* benodoro Watch App */;
 			targetProxy = 2E074D5C2D49CAFF00375131 /* PBXContainerItemProxy */;
+		};
+		2E074DA22D49CBAC00375131 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E074D952D49CBAB00375131 /* benodoroWatchWidgetExtension */;
+			targetProxy = 2E074DA12D49CBAC00375131 /* PBXContainerItemProxy */;
+		};
+		2E074DBE2D49CECC00375131 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E074DAB2D49CECA00375131 /* benodoroMacApp */;
+			targetProxy = 2E074DBD2D49CECC00375131 /* PBXContainerItemProxy */;
+		};
+		2E074DC82D49CECC00375131 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E074DAB2D49CECA00375131 /* benodoroMacApp */;
+			targetProxy = 2E074DC72D49CECC00375131 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -613,6 +932,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "benodoro Watch App/benodoro Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"benodoro Watch App/Preview Content\"";
@@ -622,6 +942,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = benodoro;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.bryandebourbon.benodoro;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -634,7 +955,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
@@ -643,6 +964,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "benodoro Watch App/benodoro Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"benodoro Watch App/Preview Content\"";
@@ -652,6 +974,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = benodoro;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.bryandebourbon.benodoro;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -665,7 +988,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 11.2;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};
@@ -674,13 +997,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = benodoro/benodoro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"benodoro/Preview Content\"";
 				DEVELOPMENT_TEAM = VZPMV36P9L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = benodoro;
+				INFOPLIST_KEY_CFBundleDisplayName = benodoro.ios;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -706,13 +1030,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = benodoro/benodoro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"benodoro/Preview Content\"";
 				DEVELOPMENT_TEAM = VZPMV36P9L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = benodoro;
+				INFOPLIST_KEY_CFBundleDisplayName = benodoro.ios;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -894,6 +1219,201 @@
 			};
 			name = Release;
 		};
+		2E074DA62D49CBAC00375131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = benodoroWatchWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = benodoroWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = benodoroWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroWatchWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		2E074DA72D49CBAC00375131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = benodoroWatchWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = benodoroWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = benodoroWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroWatchWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		2E074DCF2D49CECC00375131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = benodoroMacApp/benodoroMacApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"benodoroMacApp/Preview Content\"";
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroMacApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2E074DD02D49CECC00375131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = benodoroMacApp/benodoroMacApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"benodoroMacApp/Preview Content\"";
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroMacApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		2E074DD22D49CECC00375131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroMacAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/benodoroMacApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/benodoroMacApp";
+			};
+			name = Debug;
+		};
+		2E074DD32D49CECC00375131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroMacAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/benodoroMacApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/benodoroMacApp";
+			};
+			name = Release;
+		};
+		2E074DD52D49CECC00375131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroMacAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = benodoroMacApp;
+			};
+			name = Debug;
+		};
+		2E074DD62D49CECC00375131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VZPMV36P9L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bryandebourbon.benodoro.watchkitapp.benodoroMacAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = benodoroMacApp;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -956,6 +1476,42 @@
 			buildConfigurations = (
 				2E074D762D49CAFF00375131 /* Debug */,
 				2E074D772D49CAFF00375131 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E074DA52D49CBAC00375131 /* Build configuration list for PBXNativeTarget "benodoroWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E074DA62D49CBAC00375131 /* Debug */,
+				2E074DA72D49CBAC00375131 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E074DCE2D49CECC00375131 /* Build configuration list for PBXNativeTarget "benodoroMacApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E074DCF2D49CECC00375131 /* Debug */,
+				2E074DD02D49CECC00375131 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E074DD12D49CECC00375131 /* Build configuration list for PBXNativeTarget "benodoroMacAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E074DD22D49CECC00375131 /* Debug */,
+				2E074DD32D49CECC00375131 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E074DD42D49CECC00375131 /* Build configuration list for PBXNativeTarget "benodoroMacAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E074DD52D49CECC00375131 /* Debug */,
+				2E074DD62D49CECC00375131 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
