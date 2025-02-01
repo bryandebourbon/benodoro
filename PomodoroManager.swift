@@ -250,12 +250,16 @@ final class PomodoroManager: NSObject, ObservableObject {
                         self.apply(record: record)
                         // Also update the shared local state
                         self.saveLocalState()
+                        // Post notification so that UI updates
                         NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
+                        // *** Force the widget timeline to reload ***
+                        WidgetCenter.shared.reloadTimelines(ofKind: "benodoroWatchWidget")
                         continuation.resume()
                     }
                 } else {
                     continuation.resume()
                 }
+
             }
         }
     }
