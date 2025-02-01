@@ -122,40 +122,50 @@ struct benodoroWatchWidgetEntryView: View {
     var body: some View {
         switch family {
         case .accessoryCircular:
-            // Circular complication: show a progress indicator and a live timer.
             ZStack {
                 CircularProgressView(
                     progress: progressValue(),
                     color: entry.isBreak ? .green : .blue
                 )
-                // Live countdown using the system's timer style.
-                Text(entry.endTime, style: .timer)
-                    .font(.system(.body, design: .monospaced))
+                timerView
                     .minimumScaleFactor(0.5)
             }
             .containerBackground(for: .widget) { Color.clear }
-
+            
         case .accessoryRectangular:
             VStack(alignment: .leading) {
                 Text(entry.isBreak ? "Break" : "Focus")
                     .font(.caption2)
                     .foregroundColor(entry.isBreak ? .green : .blue)
-                Text(entry.endTime, style: .timer)
+                timerView
                     .font(.system(.body, design: .monospaced))
             }
             .containerBackground(for: .widget) { Color.clear }
-
+            
         case .accessoryInline:
             HStack {
                 Text(entry.isBreak ? "Break " : "Focus ")
-                Text(entry.endTime, style: .timer)
+                timerView
                     .font(.system(.body, design: .monospaced))
             }
             .containerBackground(for: .widget) { Color.clear }
-
+            
         default:
-            Text(entry.endTime, style: .timer)
+            timerView
                 .containerBackground(for: .widget) { Color.clear }
+        }
+    }
+    
+    /// A computed view that displays either the live timer or a static "00:00" if the session is over.
+    @ViewBuilder
+    private var timerView: some View {
+        // Compare the current date to entry.endTime.
+        // Note: In a widget, Date() might not update continuously,
+        // so for a truly dynamic countdown you might wrap this in a TimelineView.
+        if Date() >= entry.endTime {
+            Text("00:00")
+        } else {
+            Text(entry.endTime, style: .timer)
         }
     }
     
@@ -168,6 +178,7 @@ struct benodoroWatchWidgetEntryView: View {
         return remaining / total
     }
 }
+
 
 /// Circular progress view for the circular complication
 struct CircularProgressView: View {
