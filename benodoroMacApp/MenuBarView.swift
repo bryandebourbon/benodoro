@@ -3,6 +3,9 @@ import SwiftUI
 struct MenuBarView: View {
     @ObservedObject var manager = PomodoroManager.shared
     
+    // Add state to force view updates
+    @State private var lastUpdate = Date()
+    
     var body: some View {
         VStack(spacing: 12) {
             // Timer Display
@@ -33,6 +36,17 @@ struct MenuBarView: View {
         }
         .padding()
         .frame(width: 200)
+        .onAppear {
+            // Subscribe to notifications
+            NotificationCenter.default.addObserver(
+                forName: PomodoroManager.pomodoroStateDidChange,
+                object: nil,
+                queue: .main
+            ) { _ in
+                // Force view to update
+                lastUpdate = Date()
+            }
+        }
     }
     
     private func formatTime(_ time: TimeInterval) -> String {

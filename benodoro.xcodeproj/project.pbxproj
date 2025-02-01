@@ -12,7 +12,6 @@
 		2E074D972D49CBAB00375131 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E074D7E2D49CB7500375131 /* WidgetKit.framework */; };
 		2E074D982D49CBAB00375131 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E074D802D49CB7500375131 /* SwiftUI.framework */; };
 		2E074DA32D49CBAC00375131 /* benodoroWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2E074D962D49CBAB00375131 /* benodoroWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2E074DD82D49CF0B00375131 /* PomodoroManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074DD72D49CF0000375131 /* PomodoroManager.swift */; };
 		2E074DDE2D49DAB200375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
 		2E074DDF2D49DAB200375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
 		2E074DE02D49DAB200375131 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E074D1E2D49CAFC00375131 /* ContentView.swift */; };
@@ -116,7 +115,6 @@
 		2E074DAC2D49CECA00375131 /* benodoroMacApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = benodoroMacApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E074DBC2D49CECC00375131 /* benodoroMacAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = benodoroMacAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E074DC62D49CECC00375131 /* benodoroMacAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = benodoroMacAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E074DD72D49CF0000375131 /* PomodoroManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroManager.swift; sourceTree = "<group>"; };
 		2E074DDD2D49D29E00375131 /* benodoroWatchWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = benodoroWatchWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -266,7 +264,6 @@
 			isa = PBXGroup;
 			children = (
 				2E074DDD2D49D29E00375131 /* benodoroWatchWidgetExtension.entitlements */,
-				2E074DD72D49CF0000375131 /* PomodoroManager.swift */,
 				2E074D1E2D49CAFC00375131 /* ContentView.swift */,
 				2E074D1B2D49CAFC00375131 /* benodoro */,
 				2E074D2C2D49CAFE00375131 /* benodoroTests */,
@@ -697,7 +694,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E074D1F2D49CAFC00375131 /* ContentView.swift in Sources */,
-				2E074DD82D49CF0B00375131 /* PomodoroManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
