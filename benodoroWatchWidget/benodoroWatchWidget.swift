@@ -7,11 +7,14 @@
 
 import WidgetKit
 import SwiftUI
+import CloudKit
 
 /// The main provider for our watch widget using App Intents.
 struct Provider: AppIntentTimelineProvider {
+    // Reference to our shared manager
+    let manager = PomodoroManager.shared
+
     func placeholder(in context: Context) -> SimpleEntry {
-        // Placeholder data shown in widget gallery or when no real data is available
         SimpleEntry(
             date: Date(),
             configuration: ConfigurationAppIntent(),
@@ -21,13 +24,12 @@ struct Provider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        // Load the latest from iCloud before building snapshot
+        // Await an updated load from CloudKit
         await PomodoroManager.shared.loadFromCloud()
         let manager = PomodoroManager.shared
 
         let now = Date()
         guard let startTime = manager.startTime else {
-            // No active session => 0 time left
             return SimpleEntry(
                 date: now,
                 configuration: configuration,
@@ -35,7 +37,6 @@ struct Provider: AppIntentTimelineProvider {
                 isBreak: false
             )
         }
-
         let endTime = startTime.addingTimeInterval(manager.duration)
         return SimpleEntry(
             date: now,
@@ -46,26 +47,25 @@ struct Provider: AppIntentTimelineProvider {
     }
 
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        // 1) Load current Pomodoro state from iCloud
+        // Update state from CloudKit before building the timeline
         await PomodoroManager.shared.loadFromCloud()
         let manager = PomodoroManager.shared
-
         let now = Date()
 
-        // 2) If there's no active Pomodoro, return a single entry with 0 time remaining
+        // If there is no active session, check frequently for updates
         guard let startTime = manager.startTime else {
             let entry = SimpleEntry(
                 date: now,
                 configuration: configuration,
-                endTime: now,  // No active session => 0 time left
+                endTime: now,
                 isBreak: manager.isBreak
             )
-            return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(60)))
+            return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(30)))
         }
 
         let endTime = startTime.addingTimeInterval(manager.duration)
 
-        // 3) If the session has already ended, return a completed entry
+        // If the session has ended, check frequently for new ones
         if endTime <= now {
             let entry = SimpleEntry(
                 date: now,
@@ -73,14 +73,14 @@ struct Provider: AppIntentTimelineProvider {
                 endTime: now,
                 isBreak: manager.isBreak
             )
-            return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(60)))
+            return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(30)))
         }
 
-        // 4) Generate timeline entries every minute until the end time
+        // Generate timeline entries in 1-minute intervals.
         var entries: [SimpleEntry] = []
         var currentDate = now
 
-        while currentDate <= endTime {
+        while currentDate < endTime {
             let entry = SimpleEntry(
                 date: currentDate,
                 configuration: configuration,
@@ -88,14 +88,10 @@ struct Provider: AppIntentTimelineProvider {
                 isBreak: manager.isBreak
             )
             entries.append(entry)
-
-            guard let nextDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate) else {
-                break
-            }
-            currentDate = nextDate
+            currentDate = currentDate.addingTimeInterval(60)
         }
 
-        // 5) Add final entry at the exact end time
+        // Add a final entry at the exact end time
         let finalEntry = SimpleEntry(
             date: endTime,
             configuration: configuration,
@@ -104,7 +100,6 @@ struct Provider: AppIntentTimelineProvider {
         )
         entries.append(finalEntry)
 
-        // 6) Request an update right after the session ends
         return Timeline(entries: entries, policy: .after(endTime))
     }
 
@@ -128,25 +123,69 @@ struct SimpleEntry: TimelineEntry {
 
 /// The main view displayed in the watch widget/complication
 struct benodoroWatchWidgetEntryView: View {
+    @Environment(\.widgetFamily) var family
     var entry: SimpleEntry
 
     var body: some View {
-        VStack {
-            Text(entry.isBreak ? "Break" : "Focus")
-                .font(.caption)
-
-            if entry.endTime <= Date() {
-                Text("00:00")
-                    .font(.headline)
-                    .monospacedDigit()
-            } else {
+        switch family {
+        case .accessoryCircular:
+            // Circular complication: show a progress indicator and a live timer.
+            ZStack {
+                CircularProgressView(
+                    progress: progressValue(),
+                    color: entry.isBreak ? .green : .blue
+                )
+                // Live countdown using the system's timer style.
                 Text(entry.endTime, style: .timer)
-                    .font(.headline)
-                    .monospacedDigit()
+                    .font(.system(.body, design: .monospaced))
+                    .minimumScaleFactor(0.5)
             }
+            .containerBackground(for: .widget) { Color.clear }
+
+        case .accessoryRectangular:
+            VStack(alignment: .leading) {
+                Text(entry.isBreak ? "Break" : "Focus")
+                    .font(.caption2)
+                    .foregroundColor(entry.isBreak ? .green : .blue)
+                Text(entry.endTime, style: .timer)
+                    .font(.system(.body, design: .monospaced))
+            }
+            .containerBackground(for: .widget) { Color.clear }
+
+        case .accessoryInline:
+            HStack {
+                Text(entry.isBreak ? "Break " : "Focus ")
+                Text(entry.endTime, style: .timer)
+                    .font(.system(.body, design: .monospaced))
+            }
+            .containerBackground(for: .widget) { Color.clear }
+
+        default:
+            Text(entry.endTime, style: .timer)
+                .containerBackground(for: .widget) { Color.clear }
         }
-        // Provide a background, if desired
-        .containerBackground(.fill.tertiary, for: .widget)
+    }
+
+    /// Calculate the progress for the circular progress view.
+    private func progressValue() -> Double {
+        let now = Date()
+        guard entry.endTime > now else { return 0 }
+        let total = entry.endTime.timeIntervalSince(entry.date)
+        let remaining = entry.endTime.timeIntervalSince(now)
+        return remaining / total
+    }
+}
+
+/// Circular progress view for the circular complication
+struct CircularProgressView: View {
+    let progress: Double
+    let color: Color
+
+    var body: some View {
+        Circle()
+            .trim(from: 0, to: progress)
+            .stroke(color, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+            .rotationEffect(.degrees(-90))
     }
 }
 
@@ -163,6 +202,8 @@ struct benodoroWatchWidget: Widget {
         ) { entry in
             benodoroWatchWidgetEntryView(entry: entry)
         }
+        .configurationDisplayName("Pomodoro Timer")
+        .description("Shows your current Pomodoro session.")
         .supportedFamilies([.accessoryRectangular, .accessoryInline, .accessoryCircular])
     }
 }

@@ -17,10 +17,10 @@ final class PomodoroManager: ObservableObject {
 
     // MARK: - Published Properties
     @Published var startTime: Date?
-    
-    // Add notification name as a static property
+
+    // Notification name so views can update when the state changes
     static let pomodoroStateDidChange = Notification.Name("pomodoroStateDidChange")
-    
+
     @Published var duration: TimeInterval = 25 * 60  // e.g., 25 minutes
     @Published var isBreak: Bool = false
 
@@ -31,12 +31,12 @@ final class PomodoroManager: ObservableObject {
     private let container = CKContainer(identifier: "iCloud.com.example.Pomodoro")
     private let recordType = "PomodoroState"
     private let recordID = CKRecord.ID(recordName: "currentPomodoroState")
-    
+
     // Add subscription for remote changes
     private var subscription: CKQuerySubscription?
     private var notificationInfo: CKSubscription.NotificationInfo?
-    
-    // Add timer for periodic sync
+
+    // Timer for periodic sync
     private var syncTimer: AnyCancellable?
 
     // MARK: - Computed Property
@@ -55,21 +55,24 @@ final class PomodoroManager: ObservableObject {
             .sink { [weak self] _ in
                 self?.objectWillChange.send()
             }
-            
-        // Setup periodic sync timer (every 5 seconds)
+
+        // Setup periodic sync timer (every 5 seconds) using async load
         syncTimer = Timer.publish(every: 5.0, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                self?.loadFromCloud()
+                guard let self = self else { return }
+                Task {
+                    await self.loadFromCloud()
+                }
             }
-            
+
         // Setup CloudKit subscription
         setupCloudKitSubscription()
-        
+
         // Setup notification observers for app state changes
         setupAppStateObservers()
     }
-    
+
     private func setupAppStateObservers() {
         #if os(iOS)
         // iOS app state notifications
@@ -89,12 +92,12 @@ final class PomodoroManager: ObservableObject {
         )
         #endif
     }
-    
+
     @objc private func handleAppStateChange() {
         // Immediately load from cloud when app becomes active
-        loadFromCloud()
+        Task { await loadFromCloud() }
     }
-    
+
     private func setupCloudKitSubscription() {
         // Create a subscription to watch for changes
         let predicate = NSPredicate(value: true)
@@ -104,12 +107,12 @@ final class PomodoroManager: ObservableObject {
             subscriptionID: "PomodoroStateChanges",
             options: [.firesOnRecordCreation, .firesOnRecordUpdate]
         )
-        
+
         // Configure notification info
         let notificationInfo = CKSubscription.NotificationInfo()
         notificationInfo.shouldSendContentAvailable = true
         subscription.notificationInfo = notificationInfo
-        
+
         // Save the subscription
         let database = container.privateCloudDatabase
         database.save(subscription) { [weak self] _, error in
@@ -121,7 +124,7 @@ final class PomodoroManager: ObservableObject {
             }
         }
     }
-    
+
     private func observeRemoteNotifications() {
         NotificationCenter.default.addObserver(
             self,
@@ -129,7 +132,7 @@ final class PomodoroManager: ObservableObject {
             name: NSNotification.Name("CKAccountChanged"),
             object: nil
         )
-        
+
         #if os(iOS)
         // Observe background refresh on iOS
         NotificationCenter.default.addObserver(
@@ -140,9 +143,9 @@ final class PomodoroManager: ObservableObject {
         )
         #endif
     }
-    
+
     @objc private func handleRemoteChange() {
-        loadFromCloud()
+        Task { await loadFromCloud() }
     }
 
     // MARK: - Public Methods
@@ -152,9 +155,17 @@ final class PomodoroManager: ObservableObject {
         self.isBreak = isBreak
         self.duration = duration
         self.startTime = Date()
-        
+
         // Sync immediately to CloudKit
         syncToCloud()
+
+        // Force widget timeline reload so that the new focus time appears immediately.
+        #if os(iOS) || os(watchOS)
+        WidgetCenter.shared.reloadTimelines(ofKind: "benodoroWatchWidget")
+        #endif
+
+        // Post a notification so that other parts of the app (like the menu bar) update.
+        NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
     }
 
     /// Stop or reset session
@@ -162,43 +173,49 @@ final class PomodoroManager: ObservableObject {
         self.startTime = nil
         self.isBreak = false
         self.duration = 25 * 60
-        
+
         // Sync immediately to CloudKit
         syncToCloud()
+
+        #if os(iOS) || os(watchOS)
+        WidgetCenter.shared.reloadTimelines(ofKind: "benodoroWatchWidget")
+        #endif
+
+        NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
     }
 
-    /// Load from iCloud if available
-    func loadFromCloud() {
-        let database = container.privateCloudDatabase
 
-        database.fetch(withRecordID: recordID) { [weak self] (record, error) in
-            guard let self = self else { return }
-            
-            if let error = error as? CKError {
-                if error.code == .unknownItem {
-                    print("No Pomodoro record found in iCloud. This is normal on first run.")
+    /// Load from iCloud if available (async version)
+    func loadFromCloud() async {
+        await withCheckedContinuation { continuation in
+            let database = container.privateCloudDatabase
+
+            database.fetch(withRecordID: recordID) { [weak self] (record, error) in
+                guard let self = self else {
+                    continuation.resume()
                     return
+                }
+
+                if let error = error as? CKError {
+                    if error.code == .unknownItem {
+                        print("No Pomodoro record found in iCloud. This is normal on first run.")
+                    } else {
+                        print("Error fetching Pomodoro record: \(error)")
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                if let record = record {
+                    DispatchQueue.main.async {
+                        self.apply(record: record)
+                        // Notify all views to update
+                        NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
+                        continuation.resume()
+                    }
                 } else {
-                    print("Error fetching Pomodoro record: \(error)")
-                    return
+                    continuation.resume()
                 }
-            }
-
-            guard let record = record else { return }
-            
-            // Only update if the cloud record is newer
-            if let cloudModifiedTime = record.modificationDate,
-               let localStartTime = self.startTime {
-                // If our local time is more recent, we should be the source of truth
-                if localStartTime > cloudModifiedTime {
-                    return
-                }
-            }
-            
-            DispatchQueue.main.async {
-                self.apply(record: record)
-                // Notify all views to update
-                NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
             }
         }
     }
@@ -208,10 +225,10 @@ final class PomodoroManager: ObservableObject {
     /// Convert our local state -> CKRecord, then save it
     private func syncToCloud() {
         let database = container.privateCloudDatabase
-        
+
         database.fetch(withRecordID: recordID) { [weak self] (existingRecord, error) in
             guard let self = self else { return }
-            
+
             let record: CKRecord
             if let fetchError = error as? CKError, fetchError.code == .unknownItem {
                 // Record doesn't exist, create new one
@@ -221,7 +238,7 @@ final class PomodoroManager: ObservableObject {
             } else {
                 return
             }
-            
+
             self.updateFields(record: record)
             self.saveRecord(record, in: database)
         }
@@ -229,7 +246,6 @@ final class PomodoroManager: ObservableObject {
 
     /// Update CKRecord fields from the current manager state
     private func updateFields(record: CKRecord) {
-        // Convert optional Date to CKRecordValue
         if let start = startTime {
             record["startTime"] = start as CKRecordValue
         } else {
@@ -241,15 +257,12 @@ final class PomodoroManager: ObservableObject {
 
     /// Apply CKRecord fields to this manager
     private func apply(record: CKRecord) {
-        // startTime
         if let fetchedStartTime = record["startTime"] as? Date {
             self.startTime = fetchedStartTime
         } else {
             self.startTime = nil
         }
-        // duration
         self.duration = record["duration"] as? TimeInterval ?? 25 * 60
-        // isBreak
         self.isBreak = record["isBreak"] as? Bool ?? false
     }
 
@@ -269,8 +282,6 @@ final class PomodoroManager: ObservableObject {
 
 struct ContentView: View {
     @ObservedObject var manager = PomodoroManager.shared
-    
-    // Add state to force view updates
     @State private var lastUpdate = Date()
 
     var body: some View {
@@ -293,23 +304,21 @@ struct ContentView: View {
             .buttonStyle(.bordered)
         }
         .padding()
-        // For example, load from iCloud on appear
         .onAppear {
-            manager.loadFromCloud()
-            
+            // Use an asynchronous task to load from iCloud
+            Task { await manager.loadFromCloud() }
+
             // Subscribe to notifications
             NotificationCenter.default.addObserver(
                 forName: PomodoroManager.pomodoroStateDidChange,
                 object: nil,
                 queue: .main
             ) { _ in
-                // Force view to update
                 lastUpdate = Date()
             }
         }
     }
 
-    // Helper to format time intervals in MM:SS
     private func formatTime(_ time: TimeInterval) -> String {
         let totalSeconds = Int(time)
         let minutes = totalSeconds / 60
