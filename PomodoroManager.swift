@@ -8,20 +8,17 @@ import WatchConnectivity
 import WidgetKit
 #endif
 
-// MARK: - PomodoroManager
-
 final class PomodoroManager: NSObject, ObservableObject {
     // Singleton so all platforms share the same instance
     static let shared = PomodoroManager()
 
     // MARK: - Published Properties
     @Published var startTime: Date?
+    @Published var duration: TimeInterval = 25 * 60  // e.g., 25 minutes
+    @Published var isBreak: Bool = false
 
     // Notification name so views can update when the state changes
     static let pomodoroStateDidChange = Notification.Name("pomodoroStateDidChange")
-
-    @Published var duration: TimeInterval = 25 * 60  // e.g., 25 minutes
-    @Published var isBreak: Bool = false
 
     // A timer to trigger SwiftUI updates (for live countdown)
     private var timerCancellable: AnyCancellable?
@@ -30,10 +27,6 @@ final class PomodoroManager: NSObject, ObservableObject {
     private let container = CKContainer(identifier: "iCloud.com.example.Pomodoro")
     private let recordType = "PomodoroState"
     private let recordID = CKRecord.ID(recordName: "currentPomodoroState")
-
-    // CloudKit subscription and notification info
-    private var subscription: CKQuerySubscription?
-    private var notificationInfo: CKSubscription.NotificationInfo?
 
     // Timer for periodic sync
     private var syncTimer: AnyCancellable?
@@ -49,7 +42,7 @@ final class PomodoroManager: NSObject, ObservableObject {
     // MARK: - Init
     override init() {
         super.init()
-        
+
         // Fire a timer every second to refresh the UI
         timerCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
@@ -77,11 +70,42 @@ final class PomodoroManager: NSObject, ObservableObject {
         #if canImport(WatchConnectivity)
         setupWCSession()
         #endif
+
+        // Load local state from shared container on initialization
+        loadLocalState()
     }
 
+    // MARK: - Local State (Shared)
+    private let appGroupIdentifier = "group.com.bryandebourbon.Pomodoro"
+
+    /// Save the current state to shared UserDefaults for immediate widget updates.
+    private func saveLocalState() {
+        if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+            // Save the start time (as a timestamp), duration, and break state.
+            if let startTime = self.startTime {
+                sharedDefaults.set(startTime.timeIntervalSince1970, forKey: "startTime")
+            } else {
+                sharedDefaults.set(0, forKey: "startTime")
+            }
+            sharedDefaults.set(duration, forKey: "duration")
+            sharedDefaults.set(isBreak, forKey: "isBreak")
+        }
+    }
+
+    /// Load the current state from shared UserDefaults.
+    private func loadLocalState() {
+        if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+            let startTimeInterval = sharedDefaults.double(forKey: "startTime")
+            self.startTime = startTimeInterval > 0 ? Date(timeIntervalSince1970: startTimeInterval) : nil
+            let savedDuration = sharedDefaults.double(forKey: "duration")
+            self.duration = savedDuration > 0 ? savedDuration : 25 * 60
+            self.isBreak = sharedDefaults.bool(forKey: "isBreak")
+        }
+    }
+
+    // MARK: - App State Observers
     private func setupAppStateObservers() {
         #if os(iOS)
-        // iOS app state notifications
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleAppStateChange),
@@ -89,7 +113,6 @@ final class PomodoroManager: NSObject, ObservableObject {
             object: nil
         )
         #elseif os(macOS)
-        // macOS app state notifications
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleAppStateChange),
@@ -104,8 +127,8 @@ final class PomodoroManager: NSObject, ObservableObject {
         Task { await loadFromCloud() }
     }
 
+    // MARK: - CloudKit Subscription
     private func setupCloudKitSubscription() {
-        // Create a subscription to watch for changes
         let predicate = NSPredicate(value: true)
         let subscription = CKQuerySubscription(
             recordType: recordType,
@@ -114,12 +137,10 @@ final class PomodoroManager: NSObject, ObservableObject {
             options: [.firesOnRecordCreation, .firesOnRecordUpdate]
         )
 
-        // Configure notification info
         let notificationInfo = CKSubscription.NotificationInfo()
         notificationInfo.shouldSendContentAvailable = true
         subscription.notificationInfo = notificationInfo
 
-        // Save the subscription
         let database = container.privateCloudDatabase
         database.save(subscription) { [weak self] _, error in
             if let error = error {
@@ -140,7 +161,6 @@ final class PomodoroManager: NSObject, ObservableObject {
         )
 
         #if os(iOS)
-        // Observe background refresh on iOS
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleRemoteChange),
@@ -162,7 +182,10 @@ final class PomodoroManager: NSObject, ObservableObject {
         self.duration = duration
         self.startTime = Date()
 
-        // Sync immediately to CloudKit
+        // Update local shared state immediately.
+        saveLocalState()
+
+        // Sync immediately to CloudKit.
         syncToCloud()
 
         // Immediately send update to the watch if available.
@@ -175,7 +198,6 @@ final class PomodoroManager: NSObject, ObservableObject {
         WidgetCenter.shared.reloadTimelines(ofKind: "benodoroWatchWidget")
         #endif
 
-        // Post a notification so that other parts of the app (like the menu bar) update.
         NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
     }
 
@@ -185,7 +207,10 @@ final class PomodoroManager: NSObject, ObservableObject {
         self.isBreak = false
         self.duration = 25 * 60
 
-        // Sync immediately to CloudKit
+        // Update local shared state immediately.
+        saveLocalState()
+
+        // Sync immediately to CloudKit.
         syncToCloud()
 
         #if canImport(WatchConnectivity)
@@ -223,7 +248,8 @@ final class PomodoroManager: NSObject, ObservableObject {
                 if let record = record {
                     DispatchQueue.main.async {
                         self.apply(record: record)
-                        // Notify all views to update
+                        // Also update the shared local state
+                        self.saveLocalState()
                         NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
                         continuation.resume()
                     }
@@ -236,7 +262,6 @@ final class PomodoroManager: NSObject, ObservableObject {
 
     // MARK: - Private Methods
 
-    /// Convert our local state -> CKRecord, then save it
     private func syncToCloud() {
         let database = container.privateCloudDatabase
 
@@ -245,7 +270,6 @@ final class PomodoroManager: NSObject, ObservableObject {
 
             let record: CKRecord
             if let fetchError = error as? CKError, fetchError.code == .unknownItem {
-                // Record doesn't exist, create new one
                 record = CKRecord(recordType: self.recordType, recordID: self.recordID)
             } else if let existingRecord = existingRecord {
                 record = existingRecord
@@ -258,7 +282,6 @@ final class PomodoroManager: NSObject, ObservableObject {
         }
     }
 
-    /// Update CKRecord fields from the current manager state
     private func updateFields(record: CKRecord) {
         if let start = startTime {
             record["startTime"] = start as CKRecordValue
@@ -269,7 +292,6 @@ final class PomodoroManager: NSObject, ObservableObject {
         record["isBreak"] = isBreak as CKRecordValue
     }
 
-    /// Apply CKRecord fields to this manager
     private func apply(record: CKRecord) {
         if let fetchedStartTime = record["startTime"] as? Date {
             self.startTime = fetchedStartTime
@@ -280,7 +302,6 @@ final class PomodoroManager: NSObject, ObservableObject {
         self.isBreak = record["isBreak"] as? Bool ?? false
     }
 
-    /// Save the record to CloudKit
     private func saveRecord(_ record: CKRecord, in database: CKDatabase) {
         database.save(record) { (savedRecord, error) in
             if let error = error {
@@ -311,13 +332,11 @@ extension PomodoroManager: WCSessionDelegate {
             "isBreak": isBreak
         ]
 
-        // If the watch is reachable, send the update immediately.
         if WCSession.default.isReachable {
             WCSession.default.sendMessage(data, replyHandler: nil) { error in
                 print("Error sending update to watch: \(error)")
             }
         } else {
-            // Otherwise, update the application context.
             do {
                 try WCSession.default.updateApplicationContext(data)
             } catch {
@@ -336,11 +355,9 @@ extension PomodoroManager: WCSessionDelegate {
     }
 
     #if os(iOS)
-    func sessionDidBecomeInactive(_ session: WCSession) {
-    }
+    func sessionDidBecomeInactive(_ session: WCSession) { }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        // Activate the new session after having switched to a new watch.
         session.activate()
     }
     #endif
@@ -355,6 +372,9 @@ extension PomodoroManager: WCSessionDelegate {
             self.duration = applicationContext["duration"] as? TimeInterval ?? 25 * 60
             self.isBreak = applicationContext["isBreak"] as? Bool ?? false
 
+            // Update the shared local state as well.
+            self.saveLocalState()
+
             NotificationCenter.default.post(name: PomodoroManager.pomodoroStateDidChange, object: self)
 
             #if os(watchOS)
@@ -363,4 +383,4 @@ extension PomodoroManager: WCSessionDelegate {
         }
     }
 }
-#endif 
+#endif

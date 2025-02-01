@@ -1,105 +1,98 @@
-//
-//  benodoroWatchWidget.swift
-//  benodoroWatchWidget
-//
-//  Created by Bryan de Bourbon on 1/28/25.
-//
-
 import WidgetKit
 import SwiftUI
 import CloudKit
 
 /// The main provider for our watch widget using App Intents.
 struct Provider: AppIntentTimelineProvider {
-    // Reference to our shared manager
-    let manager = PomodoroManager.shared
+    
+    /// Reads the shared local state from UserDefaults.
+    func getLocalState() -> (startTime: Date?, duration: TimeInterval, isBreak: Bool) {
+        if let sharedDefaults = UserDefaults(suiteName: "group.com.bryandebourbon.Pomodoro") {
+            let startTimeInterval = sharedDefaults.double(forKey: "startTime")
+            let startTime = startTimeInterval > 0 ? Date(timeIntervalSince1970: startTimeInterval) : nil
+            let duration = sharedDefaults.double(forKey: "duration")
+            let isBreak = sharedDefaults.bool(forKey: "isBreak")
+            return (startTime, duration > 0 ? duration : 25 * 60, isBreak)
+        }
+        return (nil, 25 * 60, false)
+    }
 
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(
-            date: Date(),
+        let localState = getLocalState()
+        let now = Date()
+        let endTime = (localState.startTime ?? now).addingTimeInterval(localState.duration)
+        return SimpleEntry(
+            date: now,
             configuration: ConfigurationAppIntent(),
-            endTime: Date().addingTimeInterval(25 * 60),
-            isBreak: false
+            endTime: endTime,
+            isBreak: localState.isBreak
         )
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        // Await an updated load from CloudKit
-        await PomodoroManager.shared.loadFromCloud()
-        let manager = PomodoroManager.shared
-
+        let localState = getLocalState()
         let now = Date()
-        guard let startTime = manager.startTime else {
-            return SimpleEntry(
-                date: now,
-                configuration: configuration,
-                endTime: now,
-                isBreak: false
-            )
-        }
-        let endTime = startTime.addingTimeInterval(manager.duration)
+        let endTime = (localState.startTime ?? now).addingTimeInterval(localState.duration)
         return SimpleEntry(
             date: now,
             configuration: configuration,
             endTime: endTime,
-            isBreak: manager.isBreak
+            isBreak: localState.isBreak
         )
     }
 
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        // Update state from CloudKit before building the timeline
-        await PomodoroManager.shared.loadFromCloud()
-        let manager = PomodoroManager.shared
+        let localState = getLocalState()
         let now = Date()
-
-        // If there is no active session, check frequently for updates
-        guard let startTime = manager.startTime else {
+        let startTime = localState.startTime
+        
+        // If there's no active session, refresh soon.
+        guard let start = startTime else {
             let entry = SimpleEntry(
                 date: now,
                 configuration: configuration,
                 endTime: now,
-                isBreak: manager.isBreak
+                isBreak: localState.isBreak
             )
             return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(30)))
         }
-
-        let endTime = startTime.addingTimeInterval(manager.duration)
-
-        // If the session has ended, check frequently for new ones
+        
+        let endTime = start.addingTimeInterval(localState.duration)
+        
+        // If the session has ended, refresh soon.
         if endTime <= now {
             let entry = SimpleEntry(
                 date: now,
                 configuration: configuration,
                 endTime: now,
-                isBreak: manager.isBreak
+                isBreak: localState.isBreak
             )
             return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(30)))
         }
-
+        
         // Generate timeline entries in 1-minute intervals.
         var entries: [SimpleEntry] = []
         var currentDate = now
-
         while currentDate < endTime {
             let entry = SimpleEntry(
                 date: currentDate,
                 configuration: configuration,
                 endTime: endTime,
-                isBreak: manager.isBreak
+                isBreak: localState.isBreak
             )
             entries.append(entry)
             currentDate = currentDate.addingTimeInterval(60)
         }
-
-        // Add a final entry at the exact end time
+        
+        // Final entry at session end.
         let finalEntry = SimpleEntry(
             date: endTime,
             configuration: configuration,
             endTime: endTime,
-            isBreak: manager.isBreak
+            isBreak: localState.isBreak
         )
         entries.append(finalEntry)
-
+        
         return Timeline(entries: entries, policy: .after(endTime))
     }
 
@@ -165,7 +158,7 @@ struct benodoroWatchWidgetEntryView: View {
                 .containerBackground(for: .widget) { Color.clear }
         }
     }
-
+    
     /// Calculate the progress for the circular progress view.
     private func progressValue() -> Double {
         let now = Date()
