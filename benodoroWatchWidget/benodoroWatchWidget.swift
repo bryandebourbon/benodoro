@@ -60,46 +60,52 @@ struct Provider: AppIntentTimelineProvider {
                 endTime: now,  // No active session => 0 time left
                 isBreak: manager.isBreak
             )
-            return Timeline(entries: [entry], policy: .atEnd)
+            return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(60)))
         }
 
-        // 3) Generate timeline entries from now until the end of the session
         let endTime = startTime.addingTimeInterval(manager.duration)
-        var entries: [SimpleEntry] = []
 
-        // We'll produce a new entry every minute from now until endTime
-        var current = now
-        while current <= endTime {
+        // 3) If the session has already ended, return a completed entry
+        if endTime <= now {
             let entry = SimpleEntry(
-                date: current,
+                date: now,
+                configuration: configuration,
+                endTime: now,
+                isBreak: manager.isBreak
+            )
+            return Timeline(entries: [entry], policy: .after(now.addingTimeInterval(60)))
+        }
+
+        // 4) Generate timeline entries every minute until the end time
+        var entries: [SimpleEntry] = []
+        var currentDate = now
+
+        while currentDate <= endTime {
+            let entry = SimpleEntry(
+                date: currentDate,
                 configuration: configuration,
                 endTime: endTime,
                 isBreak: manager.isBreak
             )
             entries.append(entry)
 
-            // Advance current by 1 minute
-            if let nextMinute = Calendar.current.date(byAdding: .minute, value: 1, to: current) {
-                current = nextMinute
-            } else {
-                // Safety check in case date math fails
+            guard let nextDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate) else {
                 break
             }
+            currentDate = nextDate
         }
 
-        // Optional: one final entry exactly at endTime with 0 remaining
-        if endTime > now {
-            let endEntry = SimpleEntry(
-                date: endTime,
-                configuration: configuration,
-                endTime: endTime,
-                isBreak: manager.isBreak
-            )
-            entries.append(endEntry)
-        }
+        // 5) Add final entry at the exact end time
+        let finalEntry = SimpleEntry(
+            date: endTime,
+            configuration: configuration,
+            endTime: endTime,
+            isBreak: manager.isBreak
+        )
+        entries.append(finalEntry)
 
-        // 4) Return the timeline
-        return Timeline(entries: entries, policy: .atEnd)
+        // 6) Request an update right after the session ends
+        return Timeline(entries: entries, policy: .after(endTime))
     }
 
     func recommendations() -> [AppIntentRecommendation<ConfigurationAppIntent>] {
@@ -129,10 +135,15 @@ struct benodoroWatchWidgetEntryView: View {
             Text(entry.isBreak ? "Break" : "Focus")
                 .font(.caption)
 
-            // Use a live timer text so the watch can show a second-level countdown
-            Text(entry.endTime, style: .timer)
-                .font(.headline)
-                .monospacedDigit()
+            if entry.endTime <= Date() {
+                Text("00:00")
+                    .font(.headline)
+                    .monospacedDigit()
+            } else {
+                Text(entry.endTime, style: .timer)
+                    .font(.headline)
+                    .monospacedDigit()
+            }
         }
         // Provide a background, if desired
         .containerBackground(.fill.tertiary, for: .widget)
