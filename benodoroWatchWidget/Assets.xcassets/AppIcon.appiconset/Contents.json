@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Zoomed_App_Icon.png",
       "idiom" : "universal",
       "platform" : "watchos",
       "size" : "1024x1024"
